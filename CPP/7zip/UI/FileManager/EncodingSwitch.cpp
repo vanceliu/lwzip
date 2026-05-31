@@ -5,6 +5,7 @@
 #include "EncodingSwitch.h"
 
 #include "../../../Common/StringConvert.h"
+#include "../../../Common/UTFConvert.h"
 
 CEncodingSwitch g_EncodingSwitch;
 
