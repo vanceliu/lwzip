@@ -895,12 +895,6 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
     {
       unsigned wmId    = LOWORD(wParam);
       unsigned wmEvent = HIWORD(wParam);
-      // LWZip: Handle encoding button click
-      if (wmId == IDC_ENCODING_COMBO && wmEvent == BN_CLICKED)
-      {
-        g_App.ShowEncodingMenu();
-        return 0;
-      }
       // LWZip: Handle encoding menu selection
       if (wmId >= IDM_ENCODING_CHANGED && wmId < IDM_ENCODING_CHANGED + CEncodingSwitch::GetNumEncodings())
       {
@@ -1151,7 +1145,18 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
     
     case WM_NOTIFY:
     {
-      g_App.OnNotify((int)wParam, (LPNMHDR)lParam);
+      // LWZip: Handle toolbar dropdown for Encoding button
+      LPNMHDR pnmh = (LPNMHDR)lParam;
+      if (pnmh->code == TBN_DROPDOWN)
+      {
+        LPNMTOOLBAR pnmtb = (LPNMTOOLBAR)lParam;
+        if (pnmtb->iItem == IDC_ENCODING_COMBO)
+        {
+          g_App.ShowEncodingMenu();
+          return TBDDRET_DEFAULT;
+        }
+      }
+      g_App.OnNotify((int)wParam, pnmh);
       break;
     }
     
@@ -1215,16 +1220,6 @@ void CApp::MoveSubWindows()
     headerSize += Window_GetRealHeight(_toolBar);
   }
 
-  // LWZip: Reposition encoding button next to toolbar
-  if (_encodingButton && _toolBar)
-  {
-    RECT tbRect;
-    ::GetWindowRect(_toolBar, &tbRect);
-    ::MapWindowPoints(NULL, hWnd, (LPPOINT)&tbRect, 2);
-    int btnH = tbRect.bottom - tbRect.top;
-    ::MoveWindow(_encodingButton, xSize - 88, tbRect.top, 80, btnH, TRUE);
-  }
-  
   int ySize = MyMax((int)(rect.bottom - headerSize), 0);
   
   if (NumPanels > 1)

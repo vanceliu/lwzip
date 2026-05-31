@@ -256,6 +256,7 @@ void CApp::ReloadToolbars()
 {
   _buttonsImageList.Destroy();
   _toolBar.Destroy();
+  _encodingButton = NULL;
 
 
   if (ShowArchiveToolbar || ShowStandardToolbar)
@@ -269,44 +270,51 @@ void CApp::ReloadToolbars()
       for (i = 0; i < Z7_ARRAY_SIZE(g_StandardButtons); i++)
         AddButton(_buttonsImageList, _toolBar, g_StandardButtons[i], ShowButtonsLables, LargeButtons);
 
+    // LWZip: Add Encoding button to toolbar (reuse Info icon)
+    {
+      TBBUTTON but;
+      but.iBitmap = 0;
+      but.idCommand = IDC_ENCODING_COMBO;
+      but.fsState = TBSTATE_ENABLED;
+      but.fsStyle = TBSTYLE_BUTTON | BTNS_WHOLEDROPDOWN;
+      but.dwData = 0;
+
+      UString s (L"Encoding");
+      but.iString = 0;
+      if (ShowButtonsLables)
+        but.iString = (INT_PTR)(LPCWSTR)s;
+
+      but.iBitmap = _buttonsImageList.GetImageCount();
+      HBITMAP b = ::LoadBitmap(g_hInstance,
+          LargeButtons ?
+          MAKEINTRESOURCE(IDB_INFO):
+          MAKEINTRESOURCE(IDB_INFO2));
+      if (b)
+      {
+        _buttonsImageList.AddMasked(b, RGB(255, 0, 255));
+        ::DeleteObject(b);
+      }
+      #ifdef _UNICODE
+      _toolBar.AddButton(1, &but);
+      #else
+      _toolBar.AddButtonW(1, &but);
+      #endif
+    }
+
     _toolBar.AutoSize();
   }
-
-  CreateEncodingButton();
 }
 
 void CApp::CreateEncodingButton()
 {
-  if (_encodingButton)
-  {
-    ::DestroyWindow(_encodingButton);
-    _encodingButton = NULL;
-  }
-
-  RECT tbRect;
-  ::GetWindowRect(_toolBar, &tbRect);
-  ::MapWindowPoints(NULL, _window, (LPPOINT)&tbRect, 2);
-
-  int btnHeight = tbRect.bottom - tbRect.top;
-  _encodingButton = ::CreateWindowExW(0, L"BUTTON", L"Encoding",
-      WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON,
-      tbRect.right + 8, tbRect.top, 80, btnHeight,
-      _window, (HMENU)(UINT_PTR)IDC_ENCODING_COMBO, g_hInstance, NULL);
-
-  if (_encodingButton)
-  {
-    ::SendMessageW(_encodingButton, WM_SETFONT,
-        (WPARAM)::GetStockObject(DEFAULT_GUI_FONT), TRUE);
-  }
 }
 
 void CApp::ShowEncodingMenu()
 {
-  if (!_encodingButton)
-    return;
-
   RECT btnRect;
-  ::GetWindowRect(_encodingButton, &btnRect);
+  int btnIndex = (int)::SendMessage(_toolBar, TB_COMMANDTOINDEX, IDC_ENCODING_COMBO, 0);
+  ::SendMessage(_toolBar, TB_GETITEMRECT, btnIndex, (LPARAM)&btnRect);
+  ::MapWindowPoints(_toolBar, NULL, (LPPOINT)&btnRect, 2);
 
   HMENU hMenu = ::CreatePopupMenu();
   const CEncodingInfo *encodings = CEncodingSwitch::GetEncodings();
