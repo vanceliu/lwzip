@@ -1,0 +1,53 @@
+name: Build Windows
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  build-windows:
+    runs-on: windows-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup MSVC
+        uses: ilammy/msvc-dev-cmd@v1
+        with:
+          arch: x64
+
+      - name: Build 7zFM.exe (File Manager with Encoding Switch)
+        shell: cmd
+        run: |
+          cd CPP\7zip\Bundles\Fm
+          nmake
+
+      - name: Build 7zG.exe (GUI)
+        shell: cmd
+        run: |
+          cd CPP\7zip\Bundles\SFXWin
+          nmake
+
+      - name: Build 7z.exe (Console)
+        shell: cmd
+        run: |
+          cd CPP\7zip\Bundles\Alone2
+          nmake
+
+      - name: Collect artifacts
+        shell: cmd
+        run: |
+          mkdir dist
+          copy CPP\7zip\Bundles\Fm\O\7zFM.exe dist\
+          copy CPP\7zip\Bundles\SFXWin\O\*.exe dist\ 2>nul || echo "SFXWin skipped"
+          copy CPP\7zip\Bundles\Alone2\O\7z.exe dist\ 2>nul || echo "Alone2 skipped"
+
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: lwzip-windows-x64
+          path: dist/
+          retention-days: 30
