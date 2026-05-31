@@ -7,9 +7,12 @@ on:
     branches: [main]
   workflow_dispatch:
 
+env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+
 jobs:
   build-windows:
-    runs-on: windows-latest
+    runs-on: windows-2022
 
     steps:
       - uses: actions/checkout@v4
@@ -23,27 +26,13 @@ jobs:
         shell: cmd
         run: |
           cd CPP\7zip\Bundles\Fm
-          nmake
-
-      - name: Build 7zG.exe (GUI)
-        shell: cmd
-        run: |
-          cd CPP\7zip\Bundles\SFXWin
-          nmake
-
-      - name: Build 7z.exe (Console)
-        shell: cmd
-        run: |
-          cd CPP\7zip\Bundles\Alone2
-          nmake
+          nmake NEW_COMPILER=1 MY_STATIC_LINK=1
 
       - name: Collect artifacts
         shell: cmd
         run: |
           mkdir dist
-          copy CPP\7zip\Bundles\Fm\O\7zFM.exe dist\
-          copy CPP\7zip\Bundles\SFXWin\O\*.exe dist\ 2>nul || echo "SFXWin skipped"
-          copy CPP\7zip\Bundles\Alone2\O\7z.exe dist\ 2>nul || echo "Alone2 skipped"
+          copy CPP\7zip\Bundles\Fm\O\7zFM.exe dist\ 2>nul || copy CPP\7zip\Bundles\Fm\o\7zFM.exe dist\
 
       - name: Upload artifacts
         uses: actions/upload-artifact@v4
