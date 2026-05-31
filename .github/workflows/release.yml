@@ -8,6 +8,9 @@ on:
         required: true
         default: '26.01'
 
+permissions:
+  contents: write
+
 jobs:
   build-and-release:
     runs-on: windows-2022
