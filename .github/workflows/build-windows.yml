@@ -25,7 +25,7 @@ jobs:
         shell: cmd
         run: |
           mkdir dist
-          copy CPP\7zip\Bundles\Fm\O\7zFM.exe dist\ 2>nul || copy CPP\7zip\Bundles\Fm\o\7zFM.exe dist\
+          copy CPP\7zip\Bundles\Fm\x64\7zFM.exe dist\
 
       - name: Upload artifacts
         uses: actions/upload-artifact@v4
