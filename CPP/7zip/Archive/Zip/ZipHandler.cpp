@@ -9,6 +9,8 @@
 #include "../../../Windows/PropVariantUtils.h"
 #include "../../../Windows/TimeUtils.h"
 
+#include "../../LWZipCodePage.h"
+
 #include "../../IPassword.h"
 
 #include "../../Common/FilterCoder.h"
@@ -386,7 +388,9 @@ Z7_COM7F_IMF(CHandler::GetProperty(UInt32 index, PROPID propID, PROPVARIANT *val
     case kpidPath:
     {
       UString res;
-      item.GetUnicodeString(res, item.Name, false, _forceCodePage, _specifiedCodePage);
+      bool forceCP = _forceCodePage || g_LWZip_ForceCodePage;
+      UInt32 cp = g_LWZip_ForceCodePage ? g_LWZip_CodePage : _specifiedCodePage;
+      item.GetUnicodeString(res, item.Name, false, forceCP, cp);
       NItemName::ReplaceToOsSlashes_Remove_TailSlash(res,
           item.Is_MadeBy_Unix() // useBackslashReplacement
           );

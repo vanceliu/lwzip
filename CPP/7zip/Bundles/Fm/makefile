@@ -78,5 +78,12 @@ GUI_OBJS = \
   $O\UpdateCallbackGUI2.obj \
   $O\UpdateGUI.obj \
 
+LWZIP_OBJS = \
+  $O\LWZipCodePage.obj \
+
+CURRENT_OBJS = $(LWZIP_OBJS)
 
 !include "../../7zip.mak"
+
+$O\LWZipCodePage.obj: ../../LWZipCodePage.cpp
+	$(COMPL_O2)

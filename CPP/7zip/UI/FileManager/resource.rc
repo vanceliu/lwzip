@@ -174,6 +174,7 @@ IDB_COPY       BITMAP  "../../UI/FileManager/Copy.bmp"
 IDB_MOVE       BITMAP  "../../UI/FileManager/Move.bmp"
 IDB_DELETE     BITMAP  "../../UI/FileManager/Delete.bmp"
 IDB_INFO       BITMAP  "../../UI/FileManager/Info.bmp"
+IDB_ENCODING   BITMAP  "../../UI/FileManager/Encoding.bmp"
 IDB_ADD2       BITMAP  "../../UI/FileManager/Add2.bmp"
 IDB_EXTRACT2   BITMAP  "../../UI/FileManager/Extract2.bmp"
 IDB_TEST2      BITMAP  "../../UI/FileManager/Test2.bmp"
@@ -181,6 +182,7 @@ IDB_COPY2      BITMAP  "../../UI/FileManager/Copy2.bmp"
 IDB_MOVE2      BITMAP  "../../UI/FileManager/Move2.bmp"
 IDB_DELETE2    BITMAP  "../../UI/FileManager/Delete2.bmp"
 IDB_INFO2      BITMAP  "../../UI/FileManager/Info2.bmp"
+IDB_ENCODING2  BITMAP  "../../UI/FileManager/Encoding2.bmp"
 
 
 STRINGTABLE

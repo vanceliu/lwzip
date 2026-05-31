@@ -287,8 +287,8 @@ void CApp::ReloadToolbars()
       but.iBitmap = _buttonsImageList.GetImageCount();
       HBITMAP b = ::LoadBitmap(g_hInstance,
           LargeButtons ?
-          MAKEINTRESOURCE(IDB_INFO):
-          MAKEINTRESOURCE(IDB_INFO2));
+          MAKEINTRESOURCE(IDB_ENCODING):
+          MAKEINTRESOURCE(IDB_ENCODING2));
       if (b)
       {
         _buttonsImageList.AddMasked(b, RGB(255, 0, 255));

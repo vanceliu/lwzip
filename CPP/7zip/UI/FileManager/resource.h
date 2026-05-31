@@ -12,6 +12,10 @@
 #define IDB_DELETE   105
 #define IDB_INFO     106
 
+// LWZip: Encoding icon
+#define IDB_ENCODING  107
+#define IDB_ENCODING2 157
+
 #define IDB_ADD2     150
 #define IDB_EXTRACT2 151
 #define IDB_TEST2    152

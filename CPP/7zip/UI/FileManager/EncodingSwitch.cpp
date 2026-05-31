@@ -6,6 +6,7 @@
 
 #include "../../../Common/StringConvert.h"
 #include "../../../Common/UTFConvert.h"
+#include "../../LWZipCodePage.h"
 
 CEncodingSwitch g_EncodingSwitch;
 
@@ -40,13 +41,17 @@ UInt32 CEncodingSwitch::GetCurrentCodePage() const
 {
   if (_currentIndex < GetNumEncodings())
     return g_Encodings[_currentIndex].CodePage;
-  return 65001; // default UTF-8
+  return 65001;
 }
 
 void CEncodingSwitch::SetCurrentIndex(unsigned index)
 {
   if (index < GetNumEncodings())
+  {
     _currentIndex = index;
+    g_LWZip_ForceCodePage = true;
+    g_LWZip_CodePage = g_Encodings[index].CodePage;
+  }
 }
 
 UString CEncodingSwitch::DecodeFileName(const AString &rawName, UInt32 codePage)
