@@ -348,7 +348,16 @@ void CApp::OnEncodingSelected(unsigned index)
       CPanel &panel = Panels[panelIndex];
       if (panel.PanelCreated)
       {
-        UString path = panel._currentFolderPrefix;
+        UString path;
+        if (!panel._parentFolders.IsEmpty())
+        {
+          // Use the archive file path (not subfolder path) because subfolder
+          // names are decoded with the old codepage and won't match after switch
+          path = panel._parentFolders[0].ParentFolderPath;
+          path += panel._parentFolders[0].RelPath;
+        }
+        else
+          path = panel._currentFolderPrefix;
         panel.CloseOpenFolders();
         panel.BindToPathAndRefresh(path);
       }
