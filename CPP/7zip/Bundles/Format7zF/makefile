@@ -16,5 +16,12 @@ AR_OBJS = $(AR_OBJS) \
   $O\ArchiveExports.obj \
   $O\DllExports2.obj \
 
+LWZIP_OBJS = \
+  $O\LWZipCodePage.obj \
+
+CURRENT_OBJS = $(LWZIP_OBJS)
 
 !include "../../7zip.mak"
+
+$O\LWZipCodePage.obj: ../../LWZipCodePage.cpp
+	$(COMPL_O2)
